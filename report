@@ -1,0 +1,77 @@
+#coding:utf-8
+
+
+with open("report.txt") as f:
+    # print f.readlines()
+    lines=f.readlines()
+
+scores=[]
+for l in lines:
+    s=l.split()
+    # print s
+
+    total_score=sum(int(i) for i in s[1:]) #总成绩
+    avg_score=float(total_score)/9  #平均成绩
+    s.append(str(total_score))
+    s.append(str(avg_score))
+    scores.append(s)
+
+
+sorted_scores= sorted(scores, key=lambda x:x[-2], reverse=True)
+
+#按总分排序
+# print sorted_scores
+
+#求各类成绩平均
+list=[]
+sum=0
+i=1
+while i<=11:
+    for k in sorted_scores:
+        # print int(k[i])
+        sum+=float(k[i])
+    avg_sum=float(sum)/30
+    # print avg_sum
+    list.append(str(avg_sum))
+    sum=0
+    i+=1
+
+# print list
+list.insert(0,"平均")
+sorted_scores.insert(0,list)
+# print sorted_scores
+
+#替换不及格成绩
+
+
+
+# 添加标题
+
+title=["名次", "姓名", "语文","数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理", "总分", "平均分"]
+sorted_scores.insert(0,title)
+# print sorted_scores
+
+
+
+# 添加名次
+
+j=0
+for i in sorted_scores[1:]:
+   i.insert(0,str(j))
+   j+=1
+
+# print sorted_scores
+
+
+
+
+# 最后整理
+results=""
+for n in sorted_scores:
+    # print n
+    line="  ".join(n)+"\n"
+    results+=line
+print results
+
+with open("reports_new.txt", "w") as fout:
+    fout.write(results)
