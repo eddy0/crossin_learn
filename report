@@ -1,77 +1,81 @@
-#coding:utf-8
+# coding: utf-8
+
+# 读取 report.txt 文件中的成绩；
+
+
+
+# 将处理后的成绩另存为一个新文件。
+
 
 
 with open("report.txt") as f:
-    # print f.readlines()
     lines=f.readlines()
 
 scores=[]
 for l in lines:
-    s=l.split()
-    # print s
+    line=l.split()
+    scores.append(line)
 
-    total_score=sum(int(i) for i in s[1:]) #总成绩
-    avg_score=float(total_score)/9  #平均成绩
-    s.append(str(total_score))
-    s.append(str(avg_score))
-    scores.append(s)
+# print scores
+# 统计每名学生总成绩、计算平均并从高到低重新排名；
 
 
-sorted_scores= sorted(scores, key=lambda x:x[-2], reverse=True)
-
-#按总分排序
-# print sorted_scores
-
-#求各类成绩平均
-list=[]
-sum=0
-i=1
-while i<=11:
-    for k in sorted_scores:
-        # print int(k[i])
-        sum+=float(k[i])
-    avg_sum=float(sum)/30
-    # print avg_sum
-    list.append(str(avg_sum))
+for i in scores:
+    # print i
     sum=0
-    i+=1
-
-# print list
-list.insert(0,"平均")
-sorted_scores.insert(0,list)
-# print sorted_scores
-
-#替换不及格成绩
-
+    for j in i[1:]:
+        sum+=int(j)
+    avg_scores=float(sum)/9
+    avg="%.2f" %avg_scores
+    i.append(str(sum))
+    i.append(avg)
+    # print i
 
 
-# 添加标题
-
-title=["名次", "姓名", "语文","数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理", "总分", "平均分"]
-sorted_scores.insert(0,title)
-# print sorted_scores
+scores= sorted(scores, key=lambda x:x[-2], reverse=True)
+print scores
 
 
+# 汇总每一科目的平均分和总平均分（见下表第一行） 姓名 语文 数学 英语 物理 化学 生物 政治 历史 地理
+list=["平均"]
+for x in range(1,12):
+    sum=0
+    for k in scores:
+        sum+=float(k[x])
+    avg_score="%.2f" %(float(sum)/30)
+    list.append(avg_score)
 
-# 添加名次
+scores.insert(0,list)
 
-j=0
-for i in sorted_scores[1:]:
-   i.insert(0,str(j))
-   j+=1
+a=["姓名", "语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理","总平均分","平均分"]
+scores.insert(0,a)
 
-# print sorted_scores
+print scores
 
 
+# 添加名次，替换60分以下的成绩为“不及格”；
+for i in scores[1:]:
+    for bad in i[1:-2]:
+        if float(bad)<60:
+            # print i.index(bad)
+            i[i.index(bad)] ="不及格"
 
+# print scores
 
-# 最后整理
+k=0
+while k<=30:
+    for l in scores:
+        l.insert(0,str(k))
+        k+=1
+
+# print scores
+
 results=""
-for n in sorted_scores:
-    # print n
-    line="  ".join(n)+"\n"
-    results+=line
+for l in scores:
+    result="  ".join(l)+"\n"
+    results+=result
+
 print results
 
-with open("reports_new.txt", "w") as fout:
+with open("result.txt","w") as fout:
     fout.write(results)
