@@ -1,0 +1,25 @@
+# _*_coding: utf-8 -*-
+
+import requests
+import json
+
+city=raw_input("which city you'd like to check")
+
+url="http://wthrcdn.etouch.cn/weather_mini?city=%s" %city
+
+web=requests.get(url)
+result=web.json()
+
+# print result
+result_data=result.get("data")
+
+if result_data:
+    print "城市", result_data.get("city")
+    print "感冒:", result_data.get("ganmao")
+    print "温度:",result_data.get("wendu"),"'c"
+    print "空气质量", result_data.get("aqi")
+    forecast=result_data.get("forecast")
+    for fc in forecast:
+        print fc.get("date"),":",fc.get("type"),",", fc.get("low"),",",fc.get("high")
+else:
+    print "没有城市信息"
