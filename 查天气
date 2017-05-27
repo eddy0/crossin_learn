@@ -1,0 +1,56 @@
+# -*-coding: utf-8 -*-
+
+import requests
+import json
+
+appkey="19ca2a989bea3948475885a2ead0c5ad"
+city="深圳"
+
+url="https://way.jd.com/he/freeweather?city=%s&appkey=%s" %(city, appkey)
+
+req=requests.get(url)
+results=req.json()
+
+# print results
+try:
+    results_data=results.get("result")
+    heweather=results_data.get("HeWeather5")
+
+# print heweather
+
+    for i in heweather:
+        city_data = i.get("basic")
+        print "城市：", city_data.get("cnty"), city_data.get("city")
+        print "更新时间", city_data.get("update").get("loc")
+
+        weather_data = i.get("now")
+        print "当前温度：", weather_data.get("tmp"), "~C"
+        print "天气状况：", weather_data.get("cond").get("txt")
+        print "风力：", weather_data.get("wind").get("sc")
+        print "空气质量：", i.get("aqi").get("city").get("qlty")
+
+        suggestion_data = i.get("suggestion")
+        print "着装指导：", suggestion_data.get("drsg").get("brf"), suggestion_data.get("drsg").get("txt")
+        print "紫外线情况：", suggestion_data.get("uv").get("brf"), suggestion_data.get("uv").get("txt")
+        print "运动建议：", suggestion_data.get("sport").get("brf"), suggestion_data.get("sport").get("txt")
+        print "舒适度：", suggestion_data.get("comf").get("brf"), suggestion_data.get("comf").get("txt")
+
+        weather_forecast = i.get("daily_forecast")
+        print "未来一周天气预报:"
+        for fc in weather_forecast:
+            print fc.get("date"), "天气：", fc.get("cond").get("txt_d"), "最低温度：", fc.get("tmp").get(
+                "min"), "C", "最高温度：", fc.get("tmp").get("max"), "C", "风力", fc.get("wind").get("sc")
+
+except:
+    print "no such city"
+
+
+
+
+
+
+
+
+
+
+
