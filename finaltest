@@ -1,0 +1,42 @@
+# -*-coding:utf-8  -*-
+
+import requests
+import bs4
+import thread
+import cx_Freeze
+
+def get_req(page):  #获得网页内容
+    global headers
+    headers={
+        "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
+    url="http://jandan.net/ooxx/page-%d"  %page
+    req=requests.get(url, headers=headers)
+    return req.text
+
+def get_link(page):  #获取图片链接
+    inspect=bs4.BeautifulSoup(get_req(page),"lxml")
+    html=inspect.find_all("a","view_img_link")
+    img_link=["http:"+l.get("href") for l in html]
+    return img_link
+
+
+def save_pic(page):  #保存图片到本地
+    for pic in get_link(page):
+        # print pic
+        pic_content = requests.get(pic, headers=headers).content
+        file_name=pic.split("/")[-1]
+        with open("/Users/windy/desktop/jiandanpic/"+file_name,"w") as f:
+            f.write(pic_content)
+        print file_name , "下载完成"
+
+
+if __name__=="__main__":
+    start=input("输入开始页      ")
+    end=input("输入终止页")
+    
+    print "开始下载"
+    for page in range(start, end):
+        thread.start_new_thread(save_pic, (page,))
+    
+    raw_input("print ENTER 终止程序\n")
